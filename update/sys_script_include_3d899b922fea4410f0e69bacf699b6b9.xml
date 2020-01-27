@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_58872_needit.New Script Include | 2020-01-27 | 4:12</api_name>
+        <caller_access/>
+        <client_callable>true</client_callable>
+        <description>This Script Include is designed to keep my personal DEV instance (dev90392) alive 24 × 7.</description>
+        <name>New Script Include | 2020-01-27 | 4:12</name>
+        <script><![CDATA[generateIncidentData(3, 10);
+function generateIncidentData(max_incidents_per_day, number_of_days_back){
+	var user = new GlideRecord('sys_user');
+	user.addQuery('active=true');
+	user.query();
+	var user_array = [];
+	while(user.next()) {
+		user_array.push(user.sys_id.toString());
+	}
+	function getUser(){
+		return user_array[Math.round(Math.random()*(user_array.length-1))];
+	}
+	var service = new GlideRecord('cmdb_ci_service');
+	service.addQuery('parent=NULL^nameNOT LIKEtest^operational_status=1');
+	service.query();
+	while(service.next()) {		// Go back the number of days, one at a time
+		for(var day = 1; number_of_days_back >= day; day++){
+			// Generate a random number of tickets per day up to the max
+			var number_of_incidents = Math.floor((Math.random() * max_incidents_per_day) + 1);
+			for(var i = 1; number_of_incidents >= i; i++){
+				// Create the incident
+				var incident = new GlideRecord('incident');
+				incident.newRecord();
+				var random_user = getUser();
+				incident.caller_id = random_user;
+				incident.opened_by = random_user;
+				incident.cmdb_ci = service.sys_id;
+				incident.assignment_group = 'd625dccec0a8016700a222a0f7900d06';  // Service Desk
+				incident.short_description = randomLoadingMessage();
+				incident.opened_at = gs.daysAgo(day);
+				incident.setWorkflow(false);
+				incident.insert();
+			}
+		}
+	}
+	function randomLoadingMessage() {
+	    var lines = [
+	        'Locating the required gigapixels to render...',
+	        'Spinning up the hamster',
+	        'Shoveling coal into the server',
+	        'Are we there yet?',
+	        'Hang on a sec, I know your data is around here somewhere',
+	        'Searching for the Answer to Life, the Universe, and Everything',
+	        'Re-calibrating the internet',
+	        'Working on it... So, how are you?',
+	        'Please count to 100',
+	        'Doing something useful',
+	        'Prepare for awesomeness.',
+	        'Yes there really are magic elves with an abacus working frantically in here.',
+	        'Don\'t panic',
+	        'Deterministically simulating the future.',
+	        'Searching through billions of bits to find what you\'re looking for.',
+	        'Preparing for hyperspace jump',
+	        'Loading: one Mississippi... Loading: two Mississippi... Loading: three Mississippi...',
+	        'Waiting for the magic to happen',
+	        'Please wait while the punch tape loads',
+	        'The hamster is running as fast as it can, hold on a sec',
+	        'Giving it all I\'ve got',
+	        'It\'s around here somewhere ',
+	        'If you can see this I\'m still working on your request.',
+	        'Waiting for something in the server.',
+	        'This page brought to you by the Letter Q',
+	        'Firing up the flux capacitor',
+	        'Gotcha, boss! Going right at it!',
+	        'Searching for dragons',
+	        'Reassembling atoms',
+	        'Winding up the rubber band',
+	        'We\'re working on making this page load faster',
+	        'I spy something green',
+	    ];
+	    return lines[Math.round(Math.random()*(lines.length-1))];
+	}}]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>sean</sys_created_by>
+        <sys_created_on>2020-01-27 09:12:08</sys_created_on>
+        <sys_id>3d899b922fea4410f0e69bacf699b6b9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>New Script Include | 2020-01-27 | 4:12</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_include_3d899b922fea4410f0e69bacf699b6b9</sys_update_name>
+        <sys_updated_by>sean</sys_updated_by>
+        <sys_updated_on>2020-01-27 09:12:08</sys_updated_on>
+    </sys_script_include>
+</record_update>
